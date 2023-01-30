@@ -1,8 +1,8 @@
 
 const Button = (props) => {
-    return (
-      <button onClick={props.handleDo}>{props.children}</button>
-    )
-  }
-  
-  export default Button 
+  return (
+    <button className='buttonAdd' onClick={props.handleDo}>{props.children}</button>
+  )
+}
+
+export default Button 

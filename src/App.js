@@ -1,52 +1,28 @@
-import { useState, Fragment } from 'react';
+import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import './App.css';
-import TodoCard from './components/TodoCard';
-import Button from './components/UI/Button';
-import Input from './components/UI/Input';
+import TodoPage from './page/TodoPage';
+
+export const Context = createContext(null)
 
 function App() {
 
-  // const [state, setState] = useState()
+  const [search, setSearch] = useState('')
+  const [ todoApi, setTodoApi ] = useState([])
 
-  // console.log(state)
-
-  // function handleIncrement() {
-  //   const newState = state.filter((item) => item !== 2)
-  //   newState.push(5)
-  //   setState(newState)
-  // }
-  // function handleDecrement() {
-  //   setState(prev => prev - 1)
-  //   setState(prev => prev - 1)
-  //   setState(prev => prev - 1)
-  //   setState(prev => prev - 1)
-  // }
-
-  const [ todoList, setTodoList ] = useState([]) 
-  const [ value, setValue ] = useState('')
-
-  const addTodo = () => {
-    setTodoList(prev => [...prev, { id: Date(), title: value, }])
-  }
-  const deleteTodo = (todo) => {
-    const newState = todoList.filter(item => item.id !== todo.id)
-    setTodoList(newState)
-  }
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/todos?_limit=2&_page=1')
+      .then(response => response.json())
+      .then(json => setTodoApi(json))
+  }, [])
 
   return (
+    <Context.Provider value={{ search, setSearch, todoApi, setTodoApi }}>
     <div className='App'>
       <div className='container'>
-        <Input title={value} setValue={setValue}/>
-        <Button handleDo={addTodo}>
-          Hello
-        </Button>
-        <div className='flexWrapper'>
-          {todoList.map((item, i) =>
-              <TodoCard key={i} todo={item} deleteTodo={deleteTodo}/>
-          )}
-        </div>
+        <TodoPage/>
       </div>
     </div>
+    </Context.Provider>
   )
 }
 
